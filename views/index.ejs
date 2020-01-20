@@ -1,0 +1,32 @@
+<%- include("partials/header") %>
+<div class="container">
+    <header class="jumbotron mt-4">
+        <div class="container">
+            <h1>Coffee with Sweet Small Something</h1>
+            <p>A collection of places worth visiting for good coffee and mouthwatering desserts. Enjoy!</p>
+            <p>
+                <a class="btn btn-primary btn-large" href="/cafes/new">Add new coffee stop</a>
+            </p>
+        </div>
+    </header>
+     
+
+    <div class="row">
+        <% cafes.forEach(function(cafe){ %>
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="card">
+                    <img src="<%= cafe.image %>" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title"><%= cafe.name %></h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="/cafes/<%= cafe._id %>" class="btn btn-primary">More Info</a>
+                    </div>
+                </div>
+            </div>
+        <% }); %>
+    </div>
+
+
+</div>
+
+<%- include("partials/footer") %>

@@ -1,0 +1,21 @@
+<%- include("partials/header") %>
+<div class="container">
+        <form>
+            <h1 class="text-center mt-4">Add a new coffee stop</h1>
+            <div style="width: 30%; margin: 25px auto;">
+                <form action="/cafes" method="POST">
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="name" placeholder="name">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="image" placeholder="image url">
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-lg btn-primary btn-block">Submit!</button>
+                    </div>
+                </form>
+                <a href="/cafes">Go Back</a>
+            </div>
+        </form>
+</div>
+<%- include("partials/footer") %>
