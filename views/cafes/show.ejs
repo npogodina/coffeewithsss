@@ -1,0 +1,21 @@
+<%- include("../partials/header") %>
+
+<h1>This is the show template.</h1>
+
+<p><%= cafe.name %></p>
+
+<img src="<%= cafe.image %>" alt="">
+
+<p><%= cafe.description %></p>
+
+<p>
+    <a class="btn btn-success" href="/cafes/<%= cafe._id %>/comments/new">Add New Comment</a>
+</p>
+
+<% cafe.comments.forEach(function(comment){ %>
+    <p>
+        <strong><%= comment.author %></strong> - <%= comment.text %>
+    </p>
+<% }) %>
+
+<%- include("../partials/footer") %>

@@ -2,6 +2,9 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const Cafe = require("./models/cafe");
+const Comment = require("./models/comment");
+const seedDB = require("./seeds");
 const port = 3000;
 
 mongoose.connect("mongodb://localhost:27017/coffee_with_sss", { useNewUrlParser: true });
@@ -10,28 +13,7 @@ mongoose.set('useUnifiedTopology', true);
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 
-// SCHEMA SETUP
-var cafeSchema = new mongoose.Schema({
-    name: String,
-    image: String,
-    description: String
-});
-
-var Cafe = mongoose.model("Cafe", cafeSchema);
-
-// Cafe.create(
-//     {
-//         name: "The French Bakery",
-//         image: "https://s3-media0.fl.yelpcdn.com/bphoto/IW71uGVvEGo0qyJUkLhAqQ/o.jpg",
-//         description: "When you enter the door,  your nose is filled up with the aroma of coffee and freshly baked pastries - a combination where  one who like these finer things in life would not turn away."
-//     }, function(err, cafe){
-//         if(err){
-//             console.log(err);
-//         } else {
-//             console.log("Created a new cafe: ");
-//             console.log(cafe);
-//         }
-//     });
+seedDB();
 
 app.get("/", function(req, res){
     res.render("landing");
@@ -43,7 +25,7 @@ app.get("/cafes", function(req, res){
         if(err){
             console.log(err);
         } else {
-            res.render("index",{cafes:allCafes});
+            res.render("cafes/index",{cafes:allCafes});
         }
     });
 });
@@ -67,19 +49,61 @@ app.post("/cafes", function(req, res){
 
 // NEW ROUTE
 app.get("/cafes/new", function(req, res){
-   res.render("new.ejs"); 
+   res.render("cafes/new"); 
 });
 
 // SHOW ROUTE
 app.get("/cafes/:id", function(req, res){
-    Cafe.findById(req.params.id, function(err, foundCafe){
+    Cafe.findById(req.params.id).populate("comments").exec(function(err, foundCafe){
         if(err) {
             console.log(err);
         } else {
-            res.render("show", {cafe: foundCafe});
+            console.log(foundCafe);
+            res.render("cafes/show", {cafe: foundCafe});
         };
     });
 });
+
+// =================
+// COMMENTS ROUTES
+// =================
+
+// NEW ROUTE
+app.get("/cafes/:id/comments/new", function(req, res){
+   Cafe.findById(req.params.id, function(err, cafe){
+       if(err){
+           console.log(err);
+       } else {
+            res.render("comments/new", {cafe: cafe});
+       };
+   });
+});
+
+// CREATE ROUTE
+app.post("/cafes/:id/comments", function(req, res){
+    //lookup cafe using ID    
+    Cafe.findById(req.params.id, function(err, cafe){
+        if(err){
+            console.log(err);
+            res.redirect("/cafes");
+        } else {
+            // create comment 
+            var newComment = req.body.comment;
+            Comment.create(newComment, function(err, comment){
+                if(err){
+                    console.log(err);
+                } else {
+                    // add comment to cafe
+                    cafe.comments.push(comment);
+                    cafe.save();
+                    // redirect to cafe page
+                    res.redirect("/cafes/" + cafe._id);
+                };
+            });
+        }
+    });
+});
+
 
 app.listen(port, function(){
     console.log(`App is listening on port ${port}.`);
