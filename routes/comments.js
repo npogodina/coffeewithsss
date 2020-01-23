@@ -29,9 +29,15 @@ router.post("/", isLoggedIn, function(req, res){
                 if(err){
                     console.log(err);
                 } else {
-                    // add comment to cafe
+                    // add username and id to comment
+                    comment.author.id = req.user._id;
+                    comment.author.username = req.user.username;
+                    // save comment
+                    comment.save();
+                    // add comment to cafe and save
                     cafe.comments.push(comment);
                     cafe.save();
+                    console.log(comment);
                     // redirect to cafe page
                     res.redirect("/cafes/" + cafe._id);
                 };

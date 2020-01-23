@@ -51,9 +51,9 @@ function seedDB(){
                                     cafe.comments.push(comment);
                                     cafe.save();
                                     console.log("Created new comment");
-                                }
+                                };
                             });
-                    }
+                    };
                 });
             });
         });
