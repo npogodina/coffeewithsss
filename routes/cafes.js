@@ -16,24 +16,30 @@ router.get("/", function(req, res){
 });
 
 // CREATE ROUTE
-router.post("/", function(req, res){
+router.post("/", isLoggedIn, function(req, res){
     // get data from form and add to cafes array
     var name = req.body.name;
     var image = req.body.image;
     var desc = req.body.description;
-    var newCafe = {name: name, image: image, description: desc};
-    Cafe.create(newCafe, function(err, newlyCreated){
+    // add username and id to cafe
+    var author = {
+        id: req.user._id,
+        username: req.user.username
+    };
+    var newCafe = {name: name, image: image, description: desc, author: author};
+    console.log(req.user);
+    Cafe.create(newCafe, function(err, cafe){
         if(err){
             console.log(err);
         } else {
-            console.log("all good!");
+            console.log(cafe);
             res.redirect("/cafes");
         }
     });   
 }); 
 
 // NEW ROUTE
-router.get("/new", function(req, res){
+router.get("/new", isLoggedIn, function(req, res){
    res.render("cafes/new"); 
 });
 
