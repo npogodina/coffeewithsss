@@ -140,6 +140,19 @@ app.post("/register", function(req, res){
     });
 })
 
+// Show login form
+app.get("/login", function(req, res){
+    res.render("login");
+});
+
+// Sign the user in
+app.post("/login", passport.authenticate("local", 
+    {
+        successRedirect: "/cafes",
+        failureRedirect: "/login"
+    }), function(req, res){
+});
+
 app.listen(port, function(){
     console.log(`App is listening on port ${port}.`);
 });
