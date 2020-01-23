@@ -76,6 +76,17 @@ router.put("/:id", function(req, res){
     });
 });
 
+// DELETE
+router.delete("/:id", function(req, res){
+    Cafe.findByIdAndDelete(req.params.id, function(err){
+        if(err){
+            res.redirect("/cafes");
+        } else {
+            res.redirect("/cafes");
+        };
+    });
+});
+
 // Middleware
 function isLoggedIn(req, res, next){
     if(req.isAuthenticated()){
