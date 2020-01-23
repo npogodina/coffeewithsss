@@ -55,18 +55,14 @@ router.get("/:id", function(req, res){
 });
 
 // EDIT
-router.get("/:id/edit", function(req, res){
+router.get("/:id/edit", checkCafeOwnership, function(req, res){
     Cafe.findById(req.params.id, function(err, foundCafe){
-        if(err){
-            res.redirect("/cafes");
-        } else {
-            res.render("cafes/edit", {cafe: foundCafe});
-        };
+        res.render("cafes/edit", {cafe: foundCafe});
     });
 });
 
 // UPDATE
-router.put("/:id", function(req, res){
+router.put("/:id", checkCafeOwnership, function(req, res){
     Cafe.findByIdAndUpdate(req.params.id, req.body.cafe, function(err, updatedCafe){
         if(err){
             res.redirect("/cafes");
@@ -77,7 +73,7 @@ router.put("/:id", function(req, res){
 });
 
 // DELETE
-router.delete("/:id", function(req, res){
+router.delete("/:id", checkCafeOwnership, function(req, res){
     Cafe.findByIdAndDelete(req.params.id, function(err){
         if(err){
             res.redirect("/cafes");
@@ -94,5 +90,26 @@ function isLoggedIn(req, res, next){
     };
     res.redirect("/login");
 };
+
+function checkCafeOwnership(req, res, next){
+    if(req.isAuthenticated()){
+        Cafe.findById(req.params.id, function(err, foundCafe){
+            if(err){
+                res.redirect("back");
+            } else {
+                // Has the user added this cafe?
+                if(foundCafe.author.id.equals(req.user._id)){
+                    next();
+                } else {
+                    // If not, redirect
+                    res.redirect("back");
+                };
+            };
+        });
+    // If not, redirect
+    } else {
+        res.redirect("back");
+    };
+}
 
 module.exports = router;

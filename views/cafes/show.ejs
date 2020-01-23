@@ -20,11 +20,16 @@
                     <p class="card-text">
                         <em>Submitted by <%= cafe.author.username %></em>
                     </p>
-                    <a href="/cafes/<%= cafe._id %>/edit" class="btn btn-warning">Edit cafe</a>
 
-                    <form class="d-inline" action="/cafes/<%= cafe._id %>?_method=DELETE" method="POST">
-                        <button class="btn btn-danger">Delete cafe</button>
-                    </form>
+                    <% if(currentUser && cafe.author.id.equals(currentUser._id)){ %>
+
+                        <a href="/cafes/<%= cafe._id %>/edit" class="btn btn-warning">Edit cafe</a>
+
+                        <form class="d-inline" action="/cafes/<%= cafe._id %>?_method=DELETE" method="POST">
+                            <button class="btn btn-danger">Delete cafe</button>
+                        </form>
+
+                    <% } %>
 
                 </div>
             </div>
