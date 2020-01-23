@@ -85,7 +85,7 @@ app.get("/cafes/:id", function(req, res){
 // =================
 
 // NEW ROUTE
-app.get("/cafes/:id/comments/new", function(req, res){
+app.get("/cafes/:id/comments/new", isLoggedIn, function(req, res){
    Cafe.findById(req.params.id, function(err, cafe){
        if(err){
            console.log(err);
@@ -96,7 +96,7 @@ app.get("/cafes/:id/comments/new", function(req, res){
 });
 
 // CREATE ROUTE
-app.post("/cafes/:id/comments", function(req, res){
+app.post("/cafes/:id/comments", isLoggedIn, function(req, res){
     //lookup cafe using ID    
     Cafe.findById(req.params.id, function(err, cafe){
         if(err){
@@ -152,6 +152,20 @@ app.post("/login", passport.authenticate("local",
         failureRedirect: "/login"
     }), function(req, res){
 });
+
+// Logout route
+app.get("/logout", function(req, res){
+    req.logout();
+    res.redirect("/cafes");
+});
+
+// Middleware
+function isLoggedIn(req, res, next){
+    if(req.isAuthenticated()){
+        return next();
+    };
+    res.redirect("/login");
+};
 
 app.listen(port, function(){
     console.log(`App is listening on port ${port}.`);
