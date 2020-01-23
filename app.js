@@ -2,8 +2,11 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const passport = require("passport");
+const localStrategy = require("passport-local");
 const Cafe = require("./models/cafe");
 const Comment = require("./models/comment");
+const User = require("./models/user");
 const seedDB = require("./seeds");
 const port = 3000;
 
