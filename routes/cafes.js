@@ -4,6 +4,8 @@ const router = express.Router();
 const Cafe    = require("../models/cafe"),
       Comment = require("../models/comment");
 
+const middleware = require("../middleware"); //index.js requires the whole directory
+
 // INDEX ROUTE
 router.get("/", function(req, res){
     Cafe.find({}, function(err, allCafes){
@@ -16,7 +18,7 @@ router.get("/", function(req, res){
 });
 
 // CREATE ROUTE
-router.post("/", isLoggedIn, function(req, res){
+router.post("/", middleware.isLoggedIn, function(req, res){
     // get data from form and add to cafes array
     var name = req.body.name;
     var image = req.body.image;
@@ -39,7 +41,7 @@ router.post("/", isLoggedIn, function(req, res){
 }); 
 
 // NEW ROUTE
-router.get("/new", isLoggedIn, function(req, res){
+router.get("/new", middleware.isLoggedIn, function(req, res){
    res.render("cafes/new"); 
 });
 
@@ -55,14 +57,14 @@ router.get("/:id", function(req, res){
 });
 
 // EDIT
-router.get("/:id/edit", checkCafeOwnership, function(req, res){
+router.get("/:id/edit", middleware.checkCafeOwnership, function(req, res){
     Cafe.findById(req.params.id, function(err, foundCafe){
         res.render("cafes/edit", {cafe: foundCafe});
     });
 });
 
 // UPDATE
-router.put("/:id", checkCafeOwnership, function(req, res){
+router.put("/:id", middleware.checkCafeOwnership, function(req, res){
     Cafe.findByIdAndUpdate(req.params.id, req.body.cafe, function(err, updatedCafe){
         if(err){
             res.redirect("/cafes");
@@ -73,7 +75,7 @@ router.put("/:id", checkCafeOwnership, function(req, res){
 });
 
 // DELETE
-router.delete("/:id", checkCafeOwnership, function(req, res){
+router.delete("/:id", middleware.checkCafeOwnership, function(req, res){
     Cafe.findByIdAndDelete(req.params.id, function(err){
         if(err){
             res.redirect("/cafes");
@@ -82,34 +84,5 @@ router.delete("/:id", checkCafeOwnership, function(req, res){
         };
     });
 });
-
-// Middleware
-function isLoggedIn(req, res, next){
-    if(req.isAuthenticated()){
-        return next();
-    };
-    res.redirect("/login");
-};
-
-function checkCafeOwnership(req, res, next){
-    if(req.isAuthenticated()){
-        Cafe.findById(req.params.id, function(err, foundCafe){
-            if(err){
-                res.redirect("back");
-            } else {
-                // Has the user added this cafe?
-                if(foundCafe.author.id.equals(req.user._id)){
-                    next();
-                } else {
-                    // If not, redirect
-                    res.redirect("back");
-                };
-            };
-        });
-    // If not, redirect
-    } else {
-        res.redirect("back");
-    };
-}
 
 module.exports = router;
