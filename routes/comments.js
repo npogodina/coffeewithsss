@@ -29,6 +29,7 @@ router.post("/", middleware.isLoggedIn, function(req, res){
             var newComment = req.body.comment;
             Comment.create(newComment, function(err, comment){
                 if(err){
+                    req.flash("error", "Something went wrong.");
                     console.log(err);
                 } else {
                     // add username and id to comment
@@ -41,6 +42,7 @@ router.post("/", middleware.isLoggedIn, function(req, res){
                     cafe.save();
                     console.log(comment);
                     // redirect to cafe page
+                    req.flash("success", "Successfully added comment.");
                     res.redirect("/cafes/" + cafe._id);
                 };
             });
@@ -76,6 +78,7 @@ router.delete("/:comment_id", middleware.checkCommentOwnership, function(req, re
         if(err){
             res.redirect("back");
         } else {
+            req.flash("success", "Comment deleted.");
             res.redirect("/cafes/" + req.params.id);
         };
     });

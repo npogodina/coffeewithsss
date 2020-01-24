@@ -7,6 +7,7 @@ middlewareObj.checkCafeOwnership = function(req, res, next){
     if(req.isAuthenticated()){
         Cafe.findById(req.params.id, function(err, foundCafe){
             if(err){
+                req.flash("error", "Cafe not found.");
                 res.redirect("back");
             } else {
                 // Has the user added this cafe?
@@ -14,12 +15,14 @@ middlewareObj.checkCafeOwnership = function(req, res, next){
                     next();
                 } else {
                     // If not, redirect
+                    req.flash("error", "You don't have permission to do that.");
                     res.redirect("back");
                 };
             };
         });
     // If not, redirect
     } else {
+        req.flash("error", "You need to be logged in to do that.");
         res.redirect("back");
     };
 }
@@ -28,6 +31,7 @@ middlewareObj.checkCommentOwnership = function(req, res, next){
     if(req.isAuthenticated()){
         Comment.findById(req.params.comment_id, function(err, foundComment){
             if(err){
+                req.flash("error", "Comment not found.");
                 res.redirect("back");
             } else {
                 // Has the user added this comment?
@@ -35,12 +39,14 @@ middlewareObj.checkCommentOwnership = function(req, res, next){
                     next();
                 } else {
                     // If not, redirect
+                    req.flash("error", "You don't have permission to do that.");
                     res.redirect("back");
                 };
             };
         });
     // If not, redirect
     } else {
+        req.flash("error", "You need to be logged in to do that.");
         res.redirect("back");
     };
 }
@@ -49,7 +55,7 @@ middlewareObj.isLoggedIn = function(req, res, next){
     if(req.isAuthenticated()){
         return next();
     };
-    req.flash("error", "Please login first.");
+    req.flash("error", "You need to be logged in to do that.");
     res.redirect("/login");
 };
 

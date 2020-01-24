@@ -21,10 +21,11 @@ router.get("/register", function(req, res){
 router.post("/register", function(req, res){
     User.register(new User({username: req.body.username}), req.body.password, function(err, user){
         if(err){
-            console.log(err);
-            return res.render("register");
+            req.flash("error", err.message);
+            return res.redirect("/register");
         } else {
             passport.authenticate("local")(req, res, function(){
+                req.flash("success", "Welcome to Coffee with SSS, " + user.username);
                 res.redirect("/cafes");
             });
         };
