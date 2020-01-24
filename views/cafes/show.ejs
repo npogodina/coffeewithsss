@@ -53,6 +53,12 @@
                                     </p>
                                     <a href="/cafes/<%= cafe._id %>/comments/<%= comment._id %>/edit" 
                                        class="btn btn-sm btn-warning mb-3">Edit</a>
+                                    
+                                    <form action="/cafes/<%= cafe._id %>/comments/<%= comment._id %>?_method=DELETE" 
+                                        method="POST" class="d-inline">
+                                        <input type="submit" class="btn btn-sm btn-danger mb-3" value="Delete">
+                                    </form>
+
                                 </div>
                             </div>
                         </div>
