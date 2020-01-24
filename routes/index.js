@@ -33,7 +33,7 @@ router.post("/register", function(req, res){
 
 // Show login form
 router.get("/login", function(req, res){
-    res.render("login");
+    res.render("login", {message: req.flash("error")});
 });
 
 // Sign the user in
@@ -49,13 +49,5 @@ router.get("/logout", function(req, res){
     req.logout();
     res.redirect("/cafes");
 });
-
-// Middleware
-function isLoggedIn(req, res, next){
-    if(req.isAuthenticated()){
-        return next();
-    };
-    res.redirect("/login");
-};
 
 module.exports = router;
