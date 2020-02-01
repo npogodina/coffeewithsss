@@ -4,6 +4,7 @@ var cafeSchema = new mongoose.Schema({
     name: String,
     image: String,
     description: String,
+    lattePrice: String,
     comments: [
         {
             type: mongoose.Schema.Types.ObjectId,

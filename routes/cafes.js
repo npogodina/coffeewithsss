@@ -23,12 +23,13 @@ router.post("/", middleware.isLoggedIn, function(req, res){
     var name = req.body.name;
     var image = req.body.image;
     var desc = req.body.description;
+    var lattePrice = req.body.lattePrice;
     // add username and id to cafe
     var author = {
         id: req.user._id,
         username: req.user.username
     };
-    var newCafe = {name: name, image: image, description: desc, author: author};
+    var newCafe = {name: name, image: image, description: desc, author: author, lattePrice: lattePrice};
     console.log(req.user);
     Cafe.create(newCafe, function(err, cafe){
         if(err){
