@@ -16,7 +16,11 @@ const commentRoutes = require("./routes/comments"),
       cafeRoutes    = require("./routes/cafes"),
       indexRoutes   = require("./routes/index");
 
-mongoose.connect("mongodb://localhost:27017/coffee_with_sss", { useNewUrlParser: true });
+// mongoose.connect("mongodb://localhost:27017/coffee_with_sss", { useNewUrlParser: true });
+mongoose.connect("mongodb+srv://Nataliya:Flowersmongodb09!@coffeewithsss-ijbkn.azure.mongodb.net/test?retryWrites=true&w=majority", {
+    useNewUrlParser: true,
+    useCreateIndex: true
+});
 mongoose.set('useUnifiedTopology', true);
 
 app.use(bodyParser.urlencoded({extended: true}));
