@@ -55,6 +55,6 @@ app.use(indexRoutes);
 app.use("/cafes", cafeRoutes);
 app.use("/cafes/:id/comments", commentRoutes);
 
-app.listen(port, function(){
+app.listen(process.env.PORT || 3000, function(){
     console.log(`App is listening on port ${port}.`);
 });
